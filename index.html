@@ -1,0 +1,132 @@
+<!DOCTYPE html><html lang="en"><head>
+  
+  
+  <meta charset="UTF-8">
+  <title>Build a Neon Retro Snake Game (Source Code)</title>
+  <style>
+    body { background: #000; text-align: center; font-family: sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; color: white;}
+    canvas { background: #111; border: 4px solid #39ea2c; box-shadow: 0 0 20px #39ea2c; margin-top: 20px;}
+    h1 {text-transform: uppercase; font-family: monospace; letter-spacing: 4px; color: #39ea2c; text-shadow: 0 0 10px #39ea2c;}
+  </style>
+
+            <meta name="description" content="A beautiful component imported via Developer Studio AI.">
+            <meta name="robots" content="index, follow">
+            <meta property="og:title" content="Build a Neon Retro Snake Game (Source Code)">
+            <meta property="og:description" content="A beautiful component imported via Developer Studio AI.">
+            <meta property="og:image" content="https://codescompiler.com/images/posts/js-snake-game.png">
+            <meta name="twitter:card" content="summary_large_image">
+            <meta name="twitter:title" content="Build a Neon Retro Snake Game (Source Code)">
+            <meta name="twitter:description" content="A beautiful component imported via Developer Studio AI.">
+            <meta name="twitter:image" content="https://codescompiler.com/images/posts/js-snake-game.png">
+          </head>
+<body>
+
+<!-- ── CODESCOMPILER DEMO HEADER ── -->
+<style>
+  #cc-demo-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    height: 48px;
+    background: #1a1b26;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: white;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999999;
+  }
+  #cc-demo-header a { text-decoration: none; color: white; }
+  .cc-logo { font-size: 14px; font-weight: 900; }
+  .cc-logo span { color: #04aa6d; }
+  .cc-sep { width: 1px; height: 20px; background: rgba(255,255,255,0.12); margin: 0 12px; }
+  .cc-title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.65); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cc-actions { display: flex; gap: 8px; }
+  .cc-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    color: rgba(255,255,255,0.7);
+  }
+  .cc-btn:hover { background: rgba(255,255,255,0.15); color: white; }
+  .cc-btn svg { width: 14px; height: 14px; }
+  @media (max-width: 600px) {
+    .cc-title { display: none; }
+    .cc-btn span { display: none; }
+  }
+</style>
+<header id="cc-demo-header">
+  <div style="display: flex; align-items: center; overflow: hidden;">
+    <a href="https://codescompiler.com" class="cc-logo" target="_blank" rel="dofollow"><span>Codes</span>Compiler</a>
+    <div class="cc-sep"></div>
+    <h1 class="cc-title" title="Build a Neon Retro Snake Game (Source Code)" style="margin: 0; font-size: 13px; font-weight: 600;">📺 Build a Neon Retro Snake Game (Source Code)</h1>
+  </div>
+  <div class="cc-actions">
+    <a href="https://codescompiler.com/blog/js-snake-game" class="cc-btn" target="_blank" rel="dofollow" title="Read the full post">
+      <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"></path></svg>
+      <span>Back to Post</span>
+    </a>
+    <a href="index.html" class="cc-btn" target="_blank" download="js-snake-game.html" title="Download source file">
+      <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+      <span>Download</span>
+    </a>
+    <button onclick="document.getElementById('cc-demo-header').style.display='none'" class="cc-btn" title="Hide header for fullscreen view">
+      <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l5-5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+      <span>Fullscreen</span>
+    </button>
+  </div>
+</header>
+<!-- ================================== -->
+
+  <h1>Neon Snake</h1>
+  <canvas id="game" width="400" height="400"></canvas>
+  <p>Use WASD or Arrows to move.</p>
+  <script>
+    const c = document.getElementById("game"), ctx = c.getContext("2d");
+    let speed = 7, tile = 20, tail = 5, snakeX = 10, snakeY = 10;
+    let velX = 0, velY = 0, appX = 15, appY = 15;
+    let trail = [];
+
+    function draw() {
+      snakeX += velX; snakeY += velY;
+      if(snakeX<0) snakeX=19; if(snakeX>19) snakeX=0;
+      if(snakeY<0) snakeY=19; if(snakeY>19) snakeY=0;
+
+      ctx.fillStyle = "#111"; ctx.fillRect(0,0,c.width,c.height);
+
+      ctx.fillStyle = "#39ea2c";
+      for(let i=0; i<trail.length; i++) {
+        ctx.fillRect(trail[i].x*tile, trail[i].y*tile, tile-2, tile-2);
+        if(trail[i].x===snakeX && trail[i].y===snakeY) tail = 5;
+      }
+      trail.push({x:snakeX, y:snakeY});
+      while(trail.length>tail) trail.shift();
+
+      if(appX===snakeX && appY===snakeY) { tail++; appX=Math.floor(Math.random()*20); appY=Math.floor(Math.random()*20); }
+      ctx.fillStyle = "red";
+      ctx.fillRect(appX*tile, appY*tile, tile-2, tile-2);
+    }
+    
+    document.addEventListener("keydown", (e) => {
+      if((e.key==="w" || e.key==="ArrowUp") && velY!==1) {velX=0; velY=-1;}
+      if((e.key==="s" || e.key==="ArrowDown") && velY!==-1) {velX=0; velY=1;}
+      if((e.key==="a" || e.key==="ArrowLeft") && velX!==1) {velX=-1; velY=0;}
+      if((e.key==="d" || e.key==="ArrowRight") && velX!==-1) {velX=1; velY=0;}
+    });
+    setInterval(draw, 1000/speed);
+  </script>
+
+
+</body></html>
